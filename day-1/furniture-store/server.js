@@ -10,7 +10,7 @@ const store = [
 
 
 const app = express();
-const port = process.env.PORT;
+const port = process.env.PORT || 3000;
 
 //serving static files
 app.use(express.static(path.join(__dirname, 'dist')));
@@ -42,6 +42,23 @@ app.get('/buy/:name', (req, res) => {
 
     item.inventory--
     res.send(item)
+})
+
+app.get('/sale/:admin', (req, res) => {
+    console.log(req.params);
+    console.log(store);
+    if (req.params.admin === 'admin') {
+        const saleStore = store.map((item) => {
+            if (item.inventory > 10) {
+                item.price = item.price * 0.5;
+            }
+            return item;
+        })
+
+        res.send(saleStore);
+    } else {
+        res.send(store);
+    }
 })
 
 app.listen(port, function () {
